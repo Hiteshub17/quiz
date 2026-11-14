@@ -143,7 +143,7 @@
             justify-content: center;
         }
         .opt-correct {
-            box-shadow: 0 0 25px #00f2c3;
+            box-shadow: 0 0 25px #7447ac;
             transform: scale(1.02);
             border: 3px solid #00f2c3;
         }
@@ -372,10 +372,16 @@
             });
         }
 
-        function showQuestion(q) {
+        function switchHostView(view) {
             lobbyView.style.display = 'none';
+            questionView.style.display = 'none';
             resultsView.style.display = 'none';
-            questionView.style.display = 'block';
+
+            if (view) view.style.display = 'block';
+        }
+
+        function showQuestion(q) {
+            switchHostView(questionView);
             answerRevealBox.style.display = 'none';
 
             qNumber.textContent = `Question ${q.questionNumber} of ${q.totalQuestions}`;
@@ -426,8 +432,7 @@
             answerRevealBox.style.display = 'block';
 
             setTimeout(() => {
-                questionView.style.display = 'none';
-                resultsView.style.display = 'block';
+                switchHostView(resultsView);
 
                 const tbody = document.getElementById('leaderboardBody');
                 tbody.innerHTML = '';
@@ -447,8 +452,7 @@
         }
 
         function showFinalResults(data) {
-            questionView.style.display = 'none';
-            resultsView.style.display = 'block';
+            switchHostView(resultsView);
             document.getElementById('resultsHeading').textContent = "🏆 Final Quiz Rankings";
 
             const tbody = document.getElementById('leaderboardBody');
@@ -541,7 +545,9 @@
                         playerCount.textContent = state.playerCount;
                         connectHostSSE();
 
-                        if (state.phase === 'QUESTION' && state.question && state.question.text) {
+                        if (state.phase === 'LOBBY') {
+                            switchHostView(lobbyView);
+                        } else if (state.phase === 'QUESTION' && state.question && state.question.text) {
                             showQuestion({
                                 questionNumber: state.questionNumber,
                                 totalQuestions: state.totalQuestions,
