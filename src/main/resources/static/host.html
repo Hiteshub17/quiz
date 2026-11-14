@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Host Screen</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #1e1e2f;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        #banner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #e67e22;
+            color: #fff;
+            padding: 10px;
+            font-weight: bold;
+            z-index: 1000;
+        }
+        .card {
+            background: #27293d;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        h2 { font-size: 1.6rem; color: #a0a0c0; text-transform: uppercase; letter-spacing: 2px; }
+        .room-code {
+            font-size: min(18vw, 110px);
+            font-weight: 900;
+            letter-spacing: 8px;
+            color: #00f2c3;
+            margin: 20px 0;
+            user-select: all;
+            font-family: monospace;
+        }
+        .counter-box {
+            font-size: 2rem;
+            margin: 20px 0;
+            color: #ffffff;
+        }
+        .count-badge {
+            background: #fd5d93;
+            padding: 4px 18px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        .instructions {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin: 15px 0 30px;
+        }
+        .btn {
+            background: #00f2c3;
+            color: #1e1e2f;
+            border: none;
+            padding: 14px 32px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn:active { transform: scale(0.98); }
+        .btn:disabled { background: #555; color: #888; cursor: not-allowed; }
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #555;
+            color: #aaa;
+            font-size: 0.9rem;
+            padding: 8px 16px;
+            margin-top: 20px;
+        }
+        .error-box {
+            display: none;
+            background: #e74c3c;
+            color: white;
+            padding: 14px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .error-box button {
+            margin-left: 10px;
+            padding: 6px 14px;
+            background: white;
+            color: #e74c3c;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="banner">⚠️ Reconnecting to server...</div>
+
+    <div class="card">
+        <h2>Join at <span style="color:#fff;">play.html</span> with code</h2>
+        
+        <div id="roomCodeDisplay" class="room-code">----</div>
+
+        <div class="instructions">
+            Enter the code on your phone to join the quiz!
+        </div>
+
+        <div class="counter-box">
+            Players Joined: <span id="playerCount" class="count-badge">0</span>
+        </div>
+
+        <div id="errorBox" class="error-box">
+            <span id="errorMessage"></span>
+            <button id="retryBtn">Retry</button>
+        </div>
+
+        <div>
+            <button id="startBtn" class="btn" disabled>Start Quiz</button>
+        </div>
+        <div>
+            <button id="newRoomBtn" class="btn btn-secondary">Create New Room</button>
+        </div>
+    </div>
+
+    <script>
+        const roomCodeDisplay = document.getElementById('roomCodeDisplay');
+        const playerCount = document.getElementById('playerCount');
+        const startBtn = document.getElementById('startBtn');
+        const banner = document.getElementById('banner');
+        const errorBox = document.getElementById('errorBox');
+        const errorMessage = document.getElementById('errorMessage');
+        const retryBtn = document.getElementById('retryBtn');
+        const newRoomBtn = document.getElementById('newRoomBtn');
+
+        let roomCode = localStorage.getItem('host_roomCode');
+        let hostToken = localStorage.getItem('host_token');
+        let eventSource = null;
+
+        // Fetch wrapper with 6s timeout and friendly error display
+        async function fetchWithTimeout(url, options = {}, timeoutMs = 6000) {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeoutMs);
+            try {
+                const response = await fetch(url, { ...options, signal: controller.signal });
+                clearTimeout(id);
+                return response;
+            } catch (err) {
+                clearTimeout(id);
+                throw new Error("Couldn't connect. Check your internet.");
+            }
+        }
+
+        function showError(msg, retryFn) {
+            errorMessage.textContent = msg;
+            errorBox.style.display = 'block';
+            retryBtn.onclick = () => {
+                errorBox.style.display = 'none';
+                if (retryFn) retryFn();
+            };
+        }
+
+        function clearError() {
+            errorBox.style.display = 'none';
+        }
+
+        async function createRoom() {
+            clearError();
+            try {
+                const res = await fetchWithTimeout('/api/rooms', { method: 'POST' });
+                if (!res.ok) throw new Error("Failed to create room. Server error.");
+                const data = await res.json();
+                
+                roomCode = data.roomCode;
+                hostToken = data.hostToken;
+                localStorage.setItem('host_roomCode', roomCode);
+                localStorage.setItem('host_token', hostToken);
+
+                roomCodeDisplay.textContent = roomCode;
+                connectHostSSE();
+            } catch (err) {
+                showError(err.message, createRoom);
+            }
+        }
+
+        function connectHostSSE() {
+            if (!roomCode || !hostToken) return;
+
+            if (eventSource) {
+                eventSource.close();
+            }
+
+            const url = `/api/rooms/${roomCode}/events/host?token=${encodeURIComponent(hostToken)}`;
+            eventSource = new EventSource(url);
+
+            eventSource.onopen = () => {
+                banner.style.display = 'none';
+            };
+
+            // Rule 6: Host sees player COUNT only (no names or scores)
+            eventSource.addEventListener('player_count', (e) => {
+                const data = JSON.parse(e.data);
+                playerCount.textContent = data.count;
+                startBtn.disabled = (data.count === 0);
+            });
+
+            eventSource.onerror = () => {
+                // EventSource automatically retries reconnection
+                banner.style.display = 'block';
+            };
+        }
+
+        newRoomBtn.onclick = () => {
+            if (confirm("Create a new room? This will discard the current one.")) {
+                localStorage.removeItem('host_roomCode');
+                localStorage.removeItem('host_token');
+                createRoom();
+            }
+        };
+
+        // Initialize: use existing room from localStorage or create new
+        if (roomCode && hostToken) {
+            roomCodeDisplay.textContent = roomCode;
+            connectHostSSE();
+        } else {
+            createRoom();
+        }
+    </script>
+</body>
+</html>
