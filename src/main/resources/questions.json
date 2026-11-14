@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "text": "What is the recommended size for an emergency fund?",
+    "options": [
+      "1 to 2 weeks of groceries",
+      "3 to 6 months of living expenses",
+      "1 year of luxury vacations",
+      "Equal to your total mortgage"
+    ],
+    "correctIndex": 1,
+    "sourceUrl": "https://www.consumerfinance.gov/an-essential-guide-to-building-an-emergency-fund/"
+  },
+  {
+    "id": 2,
+    "text": "In the popular 50/30/20 budget rule, what does the 20% represent?",
+    "options": [
+      "Wants & entertainment",
+      "Housing & rent",
+      "Savings & debt repayment",
+      "Taxes & health insurance"
+    ],
+    "correctIndex": 2,
+    "sourceUrl": "https://www.investopedia.com/ask/answers/022916/what-50-20-30-budget-rule.asp"
+  },
+  {
+    "id": 3,
+    "text": "Which type of interest allows your money to grow exponentially over time?",
+    "options": [
+      "Simple interest",
+      "Compound interest",
+      "Fixed rate interest",
+      "Depreciating interest"
+    ],
+    "correctIndex": 1,
+    "sourceUrl": "https://www.investopedia.com/terms/c/compoundinterest.asp"
+  },
+  {
+    "id": 4,
+    "text": "What is generally considered a good credit score range (FICO)?",
+    "options": [
+      "300 - 450",
+      "500 - 579",
+      "670 - 739",
+      "850 - 1000"
+    ],
+    "correctIndex": 2,
+    "sourceUrl": "https://www.experian.com/blogs/ask-experian/credit-education/score-basics/what-is-a-good-credit-score/"
+  },
+  {
+    "id": 5,
+    "text": "What is the primary benefit of diversifying an investment portfolio?",
+    "options": [
+      "Guaranteed double-digit returns",
+      "Spreading risk across multiple assets",
+      "Eliminating all income tax",
+      "Getting free stock trading bonuses"
+    ],
+    "correctIndex": 1,
+    "sourceUrl": "https://www.investopedia.com/terms/d/diversification.asp"
+  }
+]

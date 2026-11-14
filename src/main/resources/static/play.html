@@ -32,21 +32,18 @@
         }
         .container {
             width: 100%;
-            max-width: 420px;
+            max-width: 480px;
         }
         .card {
             background: #1a1c29;
-            border-radius: 16px;
+            border-radius: 18px;
             padding: 24px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             text-align: center;
         }
         h1 { font-size: 1.8rem; margin-bottom: 8px; color: #7f5af0; }
         p.subtitle { color: #94a1b2; font-size: 0.95rem; margin-bottom: 24px; }
-        .form-group {
-            margin-bottom: 16px;
-            text-align: left;
-        }
+        .form-group { margin-bottom: 16px; text-align: left; }
         label {
             display: block;
             margin-bottom: 6px;
@@ -67,13 +64,7 @@
             text-transform: uppercase;
             outline: none;
         }
-        input.name-input {
-            text-transform: none;
-            border-color: #7f5af0;
-        }
-        input:focus {
-            box-shadow: 0 0 10px rgba(127,90,240,0.5);
-        }
+        input.name-input { text-transform: none; border-color: #7f5af0; }
         .btn {
             width: 100%;
             background: #2cb67d;
@@ -87,8 +78,8 @@
             margin-top: 10px;
             transition: opacity 0.2s, transform 0.1s;
         }
-        .btn:hover { opacity: 0.9; }
         .btn:active { transform: scale(0.98); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .error-box {
             display: none;
             background: #e74c3c;
@@ -109,31 +100,119 @@
             cursor: pointer;
             width: 100%;
         }
-        /* Waiting Lobby Screen */
+        /* Waiting View */
         #waitingScreen { display: none; }
         .pulse-circle {
-            width: 80px;
-            height: 80px;
-            margin: 30px auto;
+            width: 70px;
+            height: 70px;
+            margin: 25px auto;
             border-radius: 50%;
             background: #7f5af0;
             animation: pulse 1.5s infinite;
         }
         @keyframes pulse {
-            0% { transform: scale(0.9); opacity: 0.8; box-shadow: 0 0 0 0 rgba(127,90,240,0.7); }
-            70% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 0 20px rgba(127,90,240,0); }
-            100% { transform: scale(0.9); opacity: 0.8; }
+            0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(127,90,240,0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 20px rgba(127,90,240,0); }
+            100% { transform: scale(0.9); }
         }
+        /* Question View */
+        #questionScreen { display: none; }
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #94a1b2;
+            font-size: 1rem;
+        }
+        .timer-badge {
+            background: #ff5722;
+            color: white;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+        }
+        .q-text {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin: 15px 0 25px;
+            line-height: 1.4;
+        }
+        .options-col {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .player-opt-btn {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            text-align: left;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+        .player-opt-btn:active { transform: scale(0.98); }
+        .opt-0 { background: #e21b3c; } /* Red */
+        .opt-1 { background: #1368ce; } /* Blue */
+        .opt-2 { background: #d89e00; } /* Yellow */
+        .opt-3 { background: #26890c; } /* Green */
+        .symbol {
+            font-size: 1.3rem;
+            margin-right: 12px;
+            background: rgba(0,0,0,0.25);
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .selected-opt {
+            box-shadow: 0 0 0 4px #ffffff;
+            transform: scale(1.02);
+        }
+        .locked-msg {
+            display: none;
+            margin-top: 16px;
+            font-size: 1rem;
+            color: #2cb67d;
+            font-weight: bold;
+        }
+        /* Results View */
+        #resultsScreen { display: none; }
+        .result-badge {
+            font-size: 3.5rem;
+            margin: 15px 0;
+        }
+        .stat-card {
+            background: #0f111a;
+            border-radius: 10px;
+            padding: 14px;
+            margin: 12px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+        .stat-val { font-weight: bold; color: #2cb67d; font-size: 1.3rem; }
     </style>
 </head>
 <body>
     <div id="banner">⚠️ Reconnecting to server...</div>
 
     <div class="container">
-        <!-- JOIN SCREEN -->
+        <!-- 1. JOIN SCREEN -->
         <div id="joinScreen" class="card">
             <h1>Join Live Quiz</h1>
-            <p class="subtitle">Enter the room code shown on the screen</p>
+            <p class="subtitle">Enter the room code and your name</p>
 
             <div id="errorBox" class="error-box">
                 <div id="errorMessage"></div>
@@ -153,60 +232,66 @@
             <button id="joinBtn" class="btn">Enter Quiz</button>
         </div>
 
-        <!-- WAITING LOBBY SCREEN -->
+        <!-- 2. WAITING LOBBY SCREEN -->
         <div id="waitingScreen" class="card">
             <h1 style="color: #2cb67d;">You're In!</h1>
             <p id="welcomeName" style="font-size: 1.3rem; margin: 10px 0; color: #fff;"></p>
             <div class="pulse-circle"></div>
-            <p style="color: #94a1b2;">Look up at the screen.<br>Waiting for host to start...</p>
+            <p style="color: #94a1b2;">Look up at the projector screen.<br>Waiting for host to start...</p>
+        </div>
+
+        <!-- 3. QUESTION SCREEN -->
+        <div id="questionScreen" class="card">
+            <div class="q-header">
+                <span id="qCountLabel">Question 1 of 5</span>
+                <span id="playerTimer" class="timer-badge">20s</span>
+            </div>
+            <div id="playerQText" class="q-text">Question here</div>
+            <div class="options-col">
+                <button class="player-opt-btn opt-0" onclick="chooseOption(0)"><div class="symbol">▲</div><span id="playerOpt0">A</span></button>
+                <button class="player-opt-btn opt-1" onclick="chooseOption(1)"><div class="symbol">◆</div><span id="playerOpt1">B</span></button>
+                <button class="player-opt-btn opt-2" onclick="chooseOption(2)"><div class="symbol">●</div><span id="playerOpt2">C</span></button>
+                <button class="player-opt-btn opt-3" onclick="chooseOption(3)"><div class="symbol">■</div><span id="playerOpt3">D</span></button>
+            </div>
+            <div id="lockedMsg" class="locked-msg">✓ Answer recorded! Waiting for time up...</div>
+        </div>
+
+        <!-- 4. RESULTS SCREEN (RULE 6: Player sees ONLY their own score and rank) -->
+        <div id="resultsScreen" class="card">
+            <div id="resultIcon" class="result-badge">🎉</div>
+            <h2 id="resultTitle" style="margin-bottom:15px;">Correct!</h2>
+            <div class="stat-card">
+                <span>Points this question:</span>
+                <span id="pointsEarnedVal" class="stat-val">+850</span>
+            </div>
+            <div class="stat-card">
+                <span>Your Total Score:</span>
+                <span id="totalScoreVal" class="stat-val">1200</span>
+            </div>
+            <div class="stat-card">
+                <span>Your Rank:</span>
+                <span id="playerRankVal" class="stat-val">#1 of 5</span>
+            </div>
+            <p style="color:#94a1b2; font-size:0.9rem; margin-top:20px;">Waiting for next question...</p>
         </div>
     </div>
 
     <script>
+        let playerId = localStorage.getItem('quiz_playerId');
+        let roomCode = localStorage.getItem('quiz_roomCode');
+        let playerName = localStorage.getItem('quiz_playerName');
+        let playerEventSource = null;
+        let countdownTimer = null;
+        let currentQuestionAnswered = false;
+
         const joinScreen = document.getElementById('joinScreen');
         const waitingScreen = document.getElementById('waitingScreen');
-        const roomCodeInput = document.getElementById('roomCodeInput');
-        const playerNameInput = document.getElementById('playerNameInput');
-        const joinBtn = document.getElementById('joinBtn');
+        const questionScreen = document.getElementById('questionScreen');
+        const resultsScreen = document.getElementById('resultsScreen');
         const errorBox = document.getElementById('errorBox');
         const errorMessage = document.getElementById('errorMessage');
         const retryBtn = document.getElementById('retryBtn');
-        const welcomeName = document.getElementById('welcomeName');
         const banner = document.getElementById('banner');
-
-        // Check if room code was passed via URL query parameter (e.g. ?room=ABCD)
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('room')) {
-            roomCodeInput.value = urlParams.get('room').toUpperCase();
-        }
-
-        // Restore saved player session if available
-        const savedPlayerId = localStorage.getItem('quiz_playerId');
-        const savedRoomCode = localStorage.getItem('quiz_roomCode');
-        const savedPlayerName = localStorage.getItem('quiz_playerName');
-
-        if (savedPlayerId && savedRoomCode && savedPlayerName) {
-            showWaiting(savedPlayerName);
-        }
-
-        function showError(msg, retryFn) {
-            errorMessage.textContent = msg;
-            errorBox.style.display = 'block';
-            retryBtn.onclick = () => {
-                errorBox.style.display = 'none';
-                if (retryFn) retryFn();
-            };
-        }
-
-        function clearError() {
-            errorBox.style.display = 'none';
-        }
-
-        function showWaiting(name) {
-            joinScreen.style.display = 'none';
-            waitingScreen.style.display = 'block';
-            welcomeName.textContent = name;
-        }
 
         async function fetchWithTimeout(url, options = {}, timeoutMs = 6000) {
             const controller = new AbortController();
@@ -221,22 +306,147 @@
             }
         }
 
+        function showError(msg, retryFn) {
+            errorMessage.textContent = msg;
+            errorBox.style.display = 'block';
+            retryBtn.onclick = () => {
+                errorBox.style.display = 'none';
+                if (retryFn) retryFn();
+            };
+        }
+
+        function connectPlayerSSE() {
+            if (!playerId || !roomCode) return;
+            if (playerEventSource) playerEventSource.close();
+
+            const url = `/api/rooms/${roomCode}/events/player?playerId=${encodeURIComponent(playerId)}`;
+            playerEventSource = new EventSource(url);
+
+            playerEventSource.onopen = () => { banner.style.display = 'none'; };
+            playerEventSource.onerror = () => { banner.style.display = 'block'; };
+
+            // STRICT RULE 1: question_started DTO contains NO correctIndex
+            playerEventSource.addEventListener('question_started', (e) => {
+                const data = JSON.parse(e.data);
+                showPlayerQuestion(data);
+            });
+
+            // STRICT RULE 6: question_closed sends player's OWN score and rank only
+            playerEventSource.addEventListener('question_closed', (e) => {
+                const data = JSON.parse(e.data);
+                showPlayerResults(data);
+            });
+
+            playerEventSource.addEventListener('quiz_finished', (e) => {
+                const data = JSON.parse(e.data);
+                showPlayerQuizFinished(data);
+            });
+        }
+
+        function showPlayerQuestion(q, preSelectedAnswer = -1) {
+            waitingScreen.style.display = 'none';
+            resultsScreen.style.display = 'none';
+            questionScreen.style.display = 'block';
+
+            currentQuestionAnswered = (preSelectedAnswer >= 0);
+            document.getElementById('lockedMsg').style.display = currentQuestionAnswered ? 'block' : 'none';
+
+            document.getElementById('qCountLabel').textContent = `Question ${q.questionNumber} of ${q.totalQuestions}`;
+            document.getElementById('playerQText').textContent = q.text;
+
+            const btns = document.querySelectorAll('.player-opt-btn');
+            for (let i = 0; i < 4; i++) {
+                const btn = btns[i];
+                document.getElementById(`playerOpt${i}`).textContent = q.options[i];
+                btn.disabled = currentQuestionAnswered;
+                btn.classList.remove('selected-opt');
+                if (i === preSelectedAnswer) {
+                    btn.classList.add('selected-opt');
+                }
+            }
+
+            if (countdownTimer) clearInterval(countdownTimer);
+            updatePlayerTimer(q.endsAt);
+            countdownTimer = setInterval(() => updatePlayerTimer(q.endsAt), 200);
+        }
+
+        function updatePlayerTimer(endsAt) {
+            const now = Date.now();
+            const sec = Math.max(0, Math.ceil((endsAt - now) / 1000));
+            document.getElementById('playerTimer').textContent = `${sec}s`;
+            if (sec <= 0) {
+                if (countdownTimer) clearInterval(countdownTimer);
+                document.querySelectorAll('.player-opt-btn').forEach(b => b.disabled = true);
+            }
+        }
+
+        async function chooseOption(index) {
+            if (currentQuestionAnswered) return;
+            currentQuestionAnswered = true;
+
+            const btns = document.querySelectorAll('.player-opt-btn');
+            btns.forEach((b, i) => {
+                b.disabled = true;
+                if (i === index) b.classList.add('selected-opt');
+            });
+
+            document.getElementById('lockedMsg').style.display = 'block';
+
+            try {
+                await fetchWithTimeout(`/api/rooms/${roomCode}/answer`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ playerId: playerId, answerIndex: index })
+                });
+            } catch (err) {
+                console.warn("Answer submission error:", err);
+            }
+        }
+
+        function showPlayerResults(data) {
+            if (countdownTimer) clearInterval(countdownTimer);
+            questionScreen.style.display = 'none';
+            resultsScreen.style.display = 'block';
+
+            const icon = document.getElementById('resultIcon');
+            const title = document.getElementById('resultTitle');
+
+            if (data.correct) {
+                icon.textContent = "🎯";
+                title.textContent = "Correct!";
+                title.style.color = "#2cb67d";
+            } else {
+                icon.textContent = "❌";
+                title.textContent = "Incorrect";
+                title.style.color = "#e74c3c";
+            }
+
+            document.getElementById('pointsEarnedVal').textContent = `+${data.pointsEarned}`;
+            document.getElementById('totalScoreVal').textContent = data.yourScore;
+            document.getElementById('playerRankVal').textContent = `#${data.yourRank} of ${data.totalPlayers}`;
+        }
+
+        function showPlayerQuizFinished(data) {
+            questionScreen.style.display = 'none';
+            resultsScreen.style.display = 'block';
+
+            document.getElementById('resultIcon').textContent = "🏆";
+            document.getElementById('resultTitle').textContent = "Quiz Complete!";
+            document.getElementById('resultTitle').style.color = "#f1c40f";
+
+            document.getElementById('pointsEarnedVal').parentElement.style.display = 'none';
+            document.getElementById('totalScoreVal').textContent = data.yourScore;
+            document.getElementById('playerRankVal').textContent = `#${data.yourRank} of ${data.totalPlayers}`;
+        }
+
         async function handleJoin() {
-            clearError();
-            const code = roomCodeInput.value.trim().toUpperCase();
-            const name = playerNameInput.value.trim();
+            const code = document.getElementById('roomCodeInput').value.trim().toUpperCase();
+            const name = document.getElementById('playerNameInput').value.trim();
 
-            if (!code) {
-                showError("Please enter a room code.", handleJoin);
+            if (!code || !name) {
+                showError("Please enter both room code and nickname.", handleJoin);
                 return;
             }
-            if (!name) {
-                showError("Please enter a nickname.", handleJoin);
-                return;
-            }
-
-            joinBtn.disabled = true;
-            joinBtn.textContent = "Joining...";
 
             try {
                 const res = await fetchWithTimeout(`/api/rooms/${encodeURIComponent(code)}/join`, {
@@ -244,36 +454,65 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name: name })
                 });
-
                 const data = await res.json();
+                if (!res.ok) throw new Error(data.error || "Failed to join");
 
-                if (!res.ok) {
-                    throw new Error(data.error || "Failed to join room.");
-                }
+                playerId = data.playerId;
+                roomCode = data.roomCode;
+                playerName = name;
+                localStorage.setItem('quiz_playerId', playerId);
+                localStorage.setItem('quiz_roomCode', roomCode);
+                localStorage.setItem('quiz_playerName', playerName);
 
-                // Store credentials locally for survivability on refresh
-                localStorage.setItem('quiz_playerId', data.playerId);
-                localStorage.setItem('quiz_roomCode', data.roomCode);
-                localStorage.setItem('quiz_playerName', name);
-
-                showWaiting(name);
+                joinScreen.style.display = 'none';
+                waitingScreen.style.display = 'block';
+                document.getElementById('welcomeName').textContent = name;
+                connectPlayerSSE();
             } catch (err) {
                 showError(err.message, handleJoin);
-            } finally {
-                joinBtn.disabled = false;
-                joinBtn.textContent = "Enter Quiz";
             }
         }
 
-        joinBtn.onclick = handleJoin;
+        document.getElementById('joinBtn').onclick = handleJoin;
 
-        // Allow pressing Enter key to submit
-        playerNameInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') handleJoin();
-        });
-        roomCodeInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') playerNameInput.focus();
-        });
+        // Strict Rule 3: Reconnect / State check on page load
+        async function initPlayer() {
+            if (playerId && roomCode && playerName) {
+                try {
+                    const res = await fetchWithTimeout(`/api/rooms/${roomCode}/state?playerId=${encodeURIComponent(playerId)}`);
+                    if (res.ok) {
+                        const state = await res.json();
+                        connectPlayerSSE();
+
+                        if (state.phase === 'LOBBY') {
+                            joinScreen.style.display = 'none';
+                            waitingScreen.style.display = 'block';
+                            document.getElementById('welcomeName').textContent = playerName;
+                        } else if (state.phase === 'QUESTION' && state.question && state.question.text) {
+                            showPlayerQuestion(state.question, state.selectedAnswer);
+                        } else if (state.phase === 'RESULTS') {
+                            showPlayerResults({
+                                correct: state.lastCorrect,
+                                pointsEarned: state.lastPointsEarned,
+                                yourScore: state.yourScore,
+                                yourRank: state.yourRank,
+                                totalPlayers: state.totalPlayers
+                            });
+                        }
+                        return;
+                    }
+                } catch (e) {
+                    console.warn("Could not restore player state:", e);
+                }
+            }
+            // If room expired or invalid credentials, show clean join screen
+            localStorage.removeItem('quiz_playerId');
+            localStorage.removeItem('quiz_roomCode');
+            localStorage.removeItem('quiz_playerName');
+            joinScreen.style.display = 'block';
+        }
+
+        initPlayer();
     </script>
 </body>
 </html>

@@ -8,7 +8,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #1e1e2f;
+            background: #11131f;
             color: #ffffff;
             min-height: 100vh;
             display: flex;
@@ -30,54 +30,48 @@
             font-weight: bold;
             z-index: 1000;
         }
-        .card {
-            background: #27293d;
-            border-radius: 16px;
-            padding: 40px;
-            max-width: 800px;
+        .container {
             width: 100%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-width: 1000px;
         }
-        h2 { font-size: 1.6rem; color: #a0a0c0; text-transform: uppercase; letter-spacing: 2px; }
+        .card {
+            background: #1e2235;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
         .room-code {
             font-size: min(18vw, 110px);
             font-weight: 900;
             letter-spacing: 8px;
             color: #00f2c3;
-            margin: 20px 0;
-            user-select: all;
+            margin: 15px 0;
             font-family: monospace;
         }
         .counter-box {
             font-size: 2rem;
             margin: 20px 0;
-            color: #ffffff;
         }
         .count-badge {
             background: #fd5d93;
-            padding: 4px 18px;
+            padding: 4px 20px;
             border-radius: 20px;
             font-weight: bold;
         }
-        .instructions {
-            font-size: 1.2rem;
-            color: #ccc;
-            margin: 15px 0 30px;
-        }
         .btn {
             background: #00f2c3;
-            color: #1e1e2f;
+            color: #11131f;
             border: none;
-            padding: 14px 32px;
-            font-size: 1.3rem;
+            padding: 16px 36px;
+            font-size: 1.4rem;
             font-weight: bold;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             transition: transform 0.1s, opacity 0.2s;
         }
         .btn:hover { opacity: 0.9; }
         .btn:active { transform: scale(0.98); }
-        .btn:disabled { background: #555; color: #888; cursor: not-allowed; }
+        .btn:disabled { background: #444; color: #888; cursor: not-allowed; }
         .btn-secondary {
             background: transparent;
             border: 2px solid #555;
@@ -85,18 +79,116 @@
             font-size: 0.9rem;
             padding: 8px 16px;
             margin-top: 20px;
+            cursor: pointer;
         }
+        /* Question Screen */
+        #questionView { display: none; }
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.4rem;
+            color: #a0a0c0;
+            margin-bottom: 20px;
+        }
+        .timer-circle {
+            background: #ff5722;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(255,87,34,0.5);
+        }
+        .question-text {
+            font-size: min(4vw, 2.2rem);
+            font-weight: 700;
+            margin: 25px 0 35px;
+            line-height: 1.3;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+        .opt-card {
+            padding: 22px;
+            border-radius: 12px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            color: white;
+            transition: opacity 0.3s, transform 0.2s;
+        }
+        .opt-0 { background: #e21b3c; } /* Red */
+        .opt-1 { background: #1368ce; } /* Blue */
+        .opt-2 { background: #d89e00; } /* Yellow */
+        .opt-3 { background: #26890c; } /* Green */
+        .opt-symbol {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            background: rgba(0,0,0,0.25);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .opt-correct {
+            box-shadow: 0 0 25px #00f2c3;
+            transform: scale(1.02);
+            border: 3px solid #00f2c3;
+        }
+        .opt-dimmed {
+            opacity: 0.35;
+        }
+        .source-link {
+            display: inline-block;
+            margin: 15px 0;
+            color: #00f2c3;
+            font-size: 1rem;
+            text-decoration: underline;
+        }
+        /* Leaderboard */
+        #resultsView { display: none; }
+        .leaderboard-table {
+            width: 100%;
+            margin: 25px 0;
+            border-collapse: collapse;
+        }
+        .leaderboard-table th {
+            color: #a0a0c0;
+            font-size: 1.1rem;
+            padding: 10px;
+            border-bottom: 2px solid #333;
+        }
+        .leaderboard-table td {
+            font-size: 1.3rem;
+            padding: 14px 10px;
+            border-bottom: 1px solid #2a2d3d;
+        }
+        .rank-1 { color: #f1c40f; font-weight: bold; }
+        .rank-2 { color: #bdc3c7; font-weight: bold; }
+        .rank-3 { color: #e67e22; font-weight: bold; }
         .error-box {
             display: none;
             background: #e74c3c;
             color: white;
-            padding: 14px;
+            padding: 12px;
             border-radius: 8px;
             margin: 20px 0;
         }
         .error-box button {
             margin-left: 10px;
-            padding: 6px 14px;
+            padding: 6px 12px;
             background: white;
             color: #e74c3c;
             border: none;
@@ -109,47 +201,91 @@
 <body>
     <div id="banner">⚠️ Reconnecting to server...</div>
 
-    <div class="card">
-        <h2>Join at <span style="color:#fff;">play.html</span> with code</h2>
-        
-        <div id="roomCodeDisplay" class="room-code">----</div>
-
-        <div class="instructions">
-            Enter the code on your phone to join the quiz!
+    <div class="container">
+        <!-- 1. LOBBY VIEW -->
+        <div id="lobbyView" class="card">
+            <h2 style="color:#a0a0c0; letter-spacing:2px;">JOIN AT <span style="color:#fff;">play.html</span></h2>
+            <div id="roomCodeDisplay" class="room-code">----</div>
+            <p style="font-size:1.2rem; color:#ccc; margin-bottom: 20px;">Use your phone or computer to join</p>
+            <div class="counter-box">
+                Players in Lobby: <span id="playerCount" class="count-badge">0</span>
+            </div>
+            <div id="errorBox" class="error-box">
+                <span id="errorMessage"></span>
+                <button id="retryBtn">Retry</button>
+            </div>
+            <div>
+                <button id="startBtn" class="btn">Start Quiz</button>
+            </div>
+            <div>
+                <button id="newRoomBtn" class="btn btn-secondary">Create New Room</button>
+            </div>
         </div>
 
-        <div class="counter-box">
-            Players Joined: <span id="playerCount" class="count-badge">0</span>
+        <!-- 2. QUESTION ACTIVE VIEW -->
+        <div id="questionView" class="card">
+            <div class="q-header">
+                <span id="qNumber">Question 1 of 5</span>
+                <div id="timerDisplay" class="timer-circle">20</div>
+                <span id="answerStats">0 answered</span>
+            </div>
+            <div id="qText" class="question-text">Question text here...</div>
+            <div class="options-grid">
+                <div id="opt0" class="opt-card opt-0"><div class="opt-symbol">▲</div><span id="optText0">Option A</span></div>
+                <div id="opt1" class="opt-card opt-1"><div class="opt-symbol">◆</div><span id="optText1">Option B</span></div>
+                <div id="opt2" class="opt-card opt-2"><div class="opt-symbol">●</div><span id="optText2">Option C</span></div>
+                <div id="opt3" class="opt-card opt-3"><div class="opt-symbol">■</div><span id="optText3">Option D</span></div>
+            </div>
+            <div id="answerRevealBox" style="display:none;">
+                <p style="font-size:1.3rem; margin-bottom: 6px;">Correct Answer: <strong id="correctAnswerLabel" style="color:#00f2c3;"></strong></p>
+                <a id="sourceUrlLink" class="source-link" target="_blank" rel="noopener">Learn more from source</a>
+            </div>
         </div>
 
-        <div id="errorBox" class="error-box">
-            <span id="errorMessage"></span>
-            <button id="retryBtn">Retry</button>
-        </div>
-
-        <div>
-            <button id="startBtn" class="btn" disabled>Start Quiz</button>
-        </div>
-        <div>
-            <button id="newRoomBtn" class="btn btn-secondary">Create New Room</button>
+        <!-- 3. RESULTS / LEADERBOARD VIEW -->
+        <div id="resultsView" class="card">
+            <h2 id="resultsHeading" style="font-size: 2rem; color:#00f2c3; margin-bottom: 10px;">Leaderboard (Top 5)</h2>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr><th>Rank</th><th>Player</th><th>Score</th></tr>
+                </thead>
+                <tbody id="leaderboardBody"></tbody>
+            </table>
+            <div>
+                <button id="nextBtn" class="btn">Next Question</button>
+            </div>
         </div>
     </div>
 
     <script>
-        const roomCodeDisplay = document.getElementById('roomCodeDisplay');
-        const playerCount = document.getElementById('playerCount');
-        const startBtn = document.getElementById('startBtn');
-        const banner = document.getElementById('banner');
-        const errorBox = document.getElementById('errorBox');
-        const errorMessage = document.getElementById('errorMessage');
-        const retryBtn = document.getElementById('retryBtn');
-        const newRoomBtn = document.getElementById('newRoomBtn');
-
         let roomCode = localStorage.getItem('host_roomCode');
         let hostToken = localStorage.getItem('host_token');
         let eventSource = null;
+        let countdownTimer = null;
 
-        // Fetch wrapper with 6s timeout and friendly error display
+        // View elements
+        const lobbyView = document.getElementById('lobbyView');
+        const questionView = document.getElementById('questionView');
+        const resultsView = document.getElementById('resultsView');
+        const roomCodeDisplay = document.getElementById('roomCodeDisplay');
+        const playerCount = document.getElementById('playerCount');
+        const startBtn = document.getElementById('startBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const newRoomBtn = document.getElementById('newRoomBtn');
+        const errorBox = document.getElementById('errorBox');
+        const errorMessage = document.getElementById('errorMessage');
+        const retryBtn = document.getElementById('retryBtn');
+        const banner = document.getElementById('banner');
+
+        // Question elements
+        const qNumber = document.getElementById('qNumber');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const answerStats = document.getElementById('answerStats');
+        const qText = document.getElementById('qText');
+        const answerRevealBox = document.getElementById('answerRevealBox');
+        const correctAnswerLabel = document.getElementById('correctAnswerLabel');
+        const sourceUrlLink = document.getElementById('sourceUrlLink');
+
         async function fetchWithTimeout(url, options = {}, timeoutMs = 6000) {
             const controller = new AbortController();
             const id = setTimeout(() => controller.abort(), timeoutMs);
@@ -172,55 +308,217 @@
             };
         }
 
-        function clearError() {
-            errorBox.style.display = 'none';
-        }
-
         async function createRoom() {
-            clearError();
             try {
                 const res = await fetchWithTimeout('/api/rooms', { method: 'POST' });
-                if (!res.ok) throw new Error("Failed to create room. Server error.");
+                if (!res.ok) throw new Error("Server error creating room");
                 const data = await res.json();
-                
                 roomCode = data.roomCode;
                 hostToken = data.hostToken;
                 localStorage.setItem('host_roomCode', roomCode);
                 localStorage.setItem('host_token', hostToken);
 
                 roomCodeDisplay.textContent = roomCode;
+                playerCount.textContent = '0';
                 connectHostSSE();
-            } catch (err) {
-                showError(err.message, createRoom);
+            } catch (e) {
+                showError(e.message, createRoom);
             }
         }
 
         function connectHostSSE() {
             if (!roomCode || !hostToken) return;
-
-            if (eventSource) {
-                eventSource.close();
-            }
+            if (eventSource) eventSource.close();
 
             const url = `/api/rooms/${roomCode}/events/host?token=${encodeURIComponent(hostToken)}`;
             eventSource = new EventSource(url);
 
             eventSource.onopen = () => {
                 banner.style.display = 'none';
+                console.log("Host SSE connected");
+            };
+            eventSource.onerror = () => {
+                banner.style.display = 'block';
             };
 
-            // Rule 6: Host sees player COUNT only (no names or scores)
+            // Player count in lobby
             eventSource.addEventListener('player_count', (e) => {
                 const data = JSON.parse(e.data);
                 playerCount.textContent = data.count;
-                startBtn.disabled = (data.count === 0);
             });
 
-            eventSource.onerror = () => {
-                // EventSource automatically retries reconnection
-                banner.style.display = 'block';
+            // Live answer count
+            eventSource.addEventListener('answer_count', (e) => {
+                const data = JSON.parse(e.data);
+                answerStats.textContent = `${data.answered} / ${data.total} answered`;
+            });
+
+            // Question started
+            eventSource.addEventListener('question_started', (e) => {
+                const data = JSON.parse(e.data);
+                showQuestion(data);
+            });
+
+            // Question closed / Results
+            eventSource.addEventListener('question_closed', (e) => {
+                const data = JSON.parse(e.data);
+                revealAnswerAndLeaderboard(data);
+            });
+
+            // Quiz finished
+            eventSource.addEventListener('quiz_finished', (e) => {
+                const data = JSON.parse(e.data);
+                showFinalResults(data);
+            });
+        }
+
+        function showQuestion(q) {
+            lobbyView.style.display = 'none';
+            resultsView.style.display = 'none';
+            questionView.style.display = 'block';
+            answerRevealBox.style.display = 'none';
+
+            qNumber.textContent = `Question ${q.questionNumber} of ${q.totalQuestions}`;
+            qText.textContent = q.text;
+            answerStats.textContent = `0 answered`;
+
+            for (let i = 0; i < 4; i++) {
+                const optEl = document.getElementById(`opt${i}`);
+                const textEl = document.getElementById(`optText${i}`);
+                textEl.textContent = q.options[i];
+                optEl.classList.remove('opt-correct', 'opt-dimmed');
+            }
+
+            if (countdownTimer) clearInterval(countdownTimer);
+            updateTimer(q.endsAt);
+            countdownTimer = setInterval(() => updateTimer(q.endsAt), 200);
+        }
+
+        function updateTimer(endsAt) {
+            const now = Date.now();
+            const secLeft = Math.max(0, Math.ceil((endsAt - now) / 1000));
+            timerDisplay.textContent = secLeft;
+            if (secLeft <= 0 && countdownTimer) {
+                clearInterval(countdownTimer);
+            }
+        }
+
+        function revealAnswerAndLeaderboard(data) {
+            if (countdownTimer) clearInterval(countdownTimer);
+            timerDisplay.textContent = "0";
+
+            for (let i = 0; i < 4; i++) {
+                const optEl = document.getElementById(`opt${i}`);
+                if (i === data.correctIndex) {
+                    optEl.classList.add('opt-correct');
+                    correctAnswerLabel.textContent = document.getElementById(`optText${i}`).textContent;
+                } else {
+                    optEl.classList.add('opt-dimmed');
+                }
+            }
+
+            if (data.sourceUrl) {
+                sourceUrlLink.href = data.sourceUrl;
+                sourceUrlLink.style.display = 'inline-block';
+            } else {
+                sourceUrlLink.style.display = 'none';
+            }
+            answerRevealBox.style.display = 'block';
+
+            setTimeout(() => {
+                questionView.style.display = 'none';
+                resultsView.style.display = 'block';
+
+                const tbody = document.getElementById('leaderboardBody');
+                tbody.innerHTML = '';
+                data.leaderboard.forEach(entry => {
+                    const tr = document.createElement('tr');
+                    const rankClass = entry.rank <= 3 ? `rank-${entry.rank}` : '';
+                    tr.innerHTML = `
+                        <td class="${rankClass}">#${entry.rank}</td>
+                        <td style="font-weight:600;">${escapeHtml(entry.name)}</td>
+                        <td style="color:#00f2c3; font-weight:bold;">${entry.score}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                nextBtn.textContent = data.isLastQuestion ? "View Final Results" : "Next Question";
+            }, 2500);
+        }
+
+        function showFinalResults(data) {
+            questionView.style.display = 'none';
+            resultsView.style.display = 'block';
+            document.getElementById('resultsHeading').textContent = "🏆 Final Quiz Rankings";
+
+            const tbody = document.getElementById('leaderboardBody');
+            tbody.innerHTML = '';
+            data.leaderboard.forEach(entry => {
+                const tr = document.createElement('tr');
+                const rankClass = entry.rank <= 3 ? `rank-${entry.rank}` : '';
+                tr.innerHTML = `
+                    <td class="${rankClass}">#${entry.rank}</td>
+                    <td style="font-weight:600;">${escapeHtml(entry.name)}</td>
+                    <td style="color:#00f2c3; font-weight:bold;">${entry.score}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            nextBtn.textContent = "Start New Quiz";
+            nextBtn.onclick = () => {
+                localStorage.removeItem('host_roomCode');
+                localStorage.removeItem('host_token');
+                window.location.reload();
             };
         }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        startBtn.onclick = async () => {
+            startBtn.disabled = true;
+            try {
+                const url = `/api/rooms/${roomCode}/start?token=${encodeURIComponent(hostToken)}`;
+                const res = await fetchWithTimeout(url, {
+                    method: 'POST',
+                    headers: { 'X-Host-Token': hostToken }
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data.error || "Failed to start");
+                }
+                // Transition immediately using the response data
+                showQuestion(data);
+            } catch (e) {
+                showError(e.message, () => { startBtn.disabled = false; });
+                startBtn.disabled = false;
+            }
+        };
+
+        nextBtn.onclick = async () => {
+            nextBtn.disabled = true;
+            try {
+                const url = `/api/rooms/${roomCode}/next?token=${encodeURIComponent(hostToken)}`;
+                const res = await fetchWithTimeout(url, {
+                    method: 'POST',
+                    headers: { 'X-Host-Token': hostToken }
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data.error || "Failed to advance");
+                }
+                if (data.status === 'question') {
+                    showQuestion(data);
+                }
+            } catch (e) {
+                showError(e.message, () => { nextBtn.disabled = false; });
+            } finally {
+                nextBtn.disabled = false;
+            }
+        };
 
         newRoomBtn.onclick = () => {
             if (confirm("Create a new room? This will discard the current one.")) {
@@ -230,13 +528,47 @@
             }
         };
 
-        // Initialize: use existing room from localStorage or create new
-        if (roomCode && hostToken) {
-            roomCodeDisplay.textContent = roomCode;
-            connectHostSSE();
-        } else {
+        // Initialize and verify room existence (Strict Rule 3: survive refresh)
+        async function initHost() {
+            if (roomCode && hostToken) {
+                try {
+                    const stateRes = await fetchWithTimeout(`/api/rooms/${roomCode}/state?token=${encodeURIComponent(hostToken)}`, {
+                        headers: { 'X-Host-Token': hostToken }
+                    });
+                    if (stateRes.ok) {
+                        const state = await stateRes.json();
+                        roomCodeDisplay.textContent = roomCode;
+                        playerCount.textContent = state.playerCount;
+                        connectHostSSE();
+
+                        if (state.phase === 'QUESTION' && state.question && state.question.text) {
+                            showQuestion({
+                                questionNumber: state.questionNumber,
+                                totalQuestions: state.totalQuestions,
+                                text: state.question.text,
+                                options: state.question.options,
+                                endsAt: state.endsAt,
+                                serverNow: state.serverNow
+                            });
+                        } else if (state.phase === 'RESULTS' && state.leaderboard) {
+                            revealAnswerAndLeaderboard({
+                                correctIndex: state.question.correctIndex,
+                                sourceUrl: state.question.sourceUrl,
+                                leaderboard: state.leaderboard,
+                                isLastQuestion: state.questionNumber >= state.totalQuestions
+                            });
+                        }
+                        return;
+                    }
+                } catch (e) {
+                    console.warn("Could not restore previous room state, creating new:", e);
+                }
+            }
+            // If room doesn't exist on server (e.g. server restarted), create a fresh room
             createRoom();
         }
+
+        initHost();
     </script>
 </body>
 </html>
