@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Host Screen</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: #11131f;
@@ -18,6 +24,7 @@
             text-align: center;
             padding: 20px;
         }
+
         #banner {
             display: none;
             position: fixed;
@@ -30,16 +37,19 @@
             font-weight: bold;
             z-index: 1000;
         }
+
         .container {
             width: 100%;
             max-width: 1000px;
         }
+
         .card {
             background: #1e2235;
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
         }
+
         .room-code {
             font-size: min(18vw, 110px);
             font-weight: 900;
@@ -48,16 +58,19 @@
             margin: 15px 0;
             font-family: monospace;
         }
+
         .counter-box {
             font-size: 2rem;
             margin: 20px 0;
         }
+
         .count-badge {
             background: #fd5d93;
             padding: 4px 20px;
             border-radius: 20px;
             font-weight: bold;
         }
+
         .btn {
             background: #00f2c3;
             color: #11131f;
@@ -69,9 +82,21 @@
             cursor: pointer;
             transition: transform 0.1s, opacity 0.2s;
         }
-        .btn:hover { opacity: 0.9; }
-        .btn:active { transform: scale(0.98); }
-        .btn:disabled { background: #444; color: #888; cursor: not-allowed; }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+        }
+
         .btn-secondary {
             background: transparent;
             border: 2px solid #555;
@@ -81,8 +106,12 @@
             margin-top: 20px;
             cursor: pointer;
         }
+
         /* Question Screen */
-        #questionView { display: none; }
+        #questionView {
+            display: none;
+        }
+
         .q-header {
             display: flex;
             justify-content: space-between;
@@ -91,6 +120,7 @@
             color: #a0a0c0;
             margin-bottom: 20px;
         }
+
         .timer-circle {
             background: #ff5722;
             color: white;
@@ -102,20 +132,23 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 15px rgba(255,87,34,0.5);
+            box-shadow: 0 0 15px rgba(255, 87, 34, 0.5);
         }
+
         .question-text {
             font-size: min(4vw, 2.2rem);
             font-weight: 700;
             margin: 25px 0 35px;
             line-height: 1.3;
         }
+
         .options-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
             margin-bottom: 25px;
         }
+
         .opt-card {
             padding: 22px;
             border-radius: 12px;
@@ -127,14 +160,31 @@
             color: white;
             transition: opacity 0.3s, transform 0.2s;
         }
-        .opt-0 { background: #e21b3c; } /* Red */
-        .opt-1 { background: #1368ce; } /* Blue */
-        .opt-2 { background: #d89e00; } /* Yellow */
-        .opt-3 { background: #26890c; } /* Green */
+
+        .opt-0 {
+            background: #e21b3c;
+        }
+
+        /* Red */
+        .opt-1 {
+            background: #1368ce;
+        }
+
+        /* Blue */
+        .opt-2 {
+            background: #d89e00;
+        }
+
+        /* Yellow */
+        .opt-3 {
+            background: #26890c;
+        }
+
+        /* Green */
         .opt-symbol {
             font-size: 1.5rem;
             margin-right: 15px;
-            background: rgba(0,0,0,0.25);
+            background: rgba(0, 0, 0, 0.25);
             width: 40px;
             height: 40px;
             border-radius: 8px;
@@ -142,14 +192,17 @@
             align-items: center;
             justify-content: center;
         }
+
         .opt-correct {
             box-shadow: 0 0 25px #7447ac;
             transform: scale(1.02);
             border: 3px solid #00f2c3;
         }
+
         .opt-dimmed {
             opacity: 0.35;
         }
+
         .source-link {
             display: inline-block;
             margin: 15px 0;
@@ -157,27 +210,46 @@
             font-size: 1rem;
             text-decoration: underline;
         }
+
         /* Leaderboard */
-        #resultsView { display: none; }
+        #resultsView {
+            display: none;
+        }
+
         .leaderboard-table {
             width: 100%;
             margin: 25px 0;
             border-collapse: collapse;
         }
+
         .leaderboard-table th {
             color: #a0a0c0;
             font-size: 1.1rem;
             padding: 10px;
             border-bottom: 2px solid #333;
         }
+
         .leaderboard-table td {
             font-size: 1.3rem;
             padding: 14px 10px;
             border-bottom: 1px solid #2a2d3d;
         }
-        .rank-1 { color: #f1c40f; font-weight: bold; }
-        .rank-2 { color: #bdc3c7; font-weight: bold; }
-        .rank-3 { color: #e67e22; font-weight: bold; }
+
+        .rank-1 {
+            color: #f1c40f;
+            font-weight: bold;
+        }
+
+        .rank-2 {
+            color: #bdc3c7;
+            font-weight: bold;
+        }
+
+        .rank-3 {
+            color: #e67e22;
+            font-weight: bold;
+        }
+
         .error-box {
             display: none;
             background: #e74c3c;
@@ -186,6 +258,7 @@
             border-radius: 8px;
             margin: 20px 0;
         }
+
         .error-box button {
             margin-left: 10px;
             padding: 6px 12px;
@@ -198,13 +271,14 @@
         }
     </style>
 </head>
+
 <body>
     <div id="banner">⚠️ Reconnecting to server...</div>
 
     <div class="container">
         <!-- 1. LOBBY VIEW -->
         <div id="lobbyView" class="card">
-            <h2 style="color:#a0a0c0; letter-spacing:2px;">JOIN AT <span style="color:#fff;">play.html</span></h2>
+            <h2 style="color:#a0a0c0; letter-spacing:2px;">JOIN AT <span style="color:#fff;">play</span></h2>
             <div id="roomCodeDisplay" class="room-code">----</div>
             <p style="font-size:1.2rem; color:#ccc; margin-bottom: 20px;">Use your phone or computer to join</p>
             <div class="counter-box">
@@ -231,23 +305,37 @@
             </div>
             <div id="qText" class="question-text">Question text here...</div>
             <div class="options-grid">
-                <div id="opt0" class="opt-card opt-0"><div class="opt-symbol">▲</div><span id="optText0">Option A</span></div>
-                <div id="opt1" class="opt-card opt-1"><div class="opt-symbol">◆</div><span id="optText1">Option B</span></div>
-                <div id="opt2" class="opt-card opt-2"><div class="opt-symbol">●</div><span id="optText2">Option C</span></div>
-                <div id="opt3" class="opt-card opt-3"><div class="opt-symbol">■</div><span id="optText3">Option D</span></div>
+                <div id="opt0" class="opt-card opt-0">
+                    <div class="opt-symbol">▲</div><span id="optText0">Option A</span>
+                </div>
+                <div id="opt1" class="opt-card opt-1">
+                    <div class="opt-symbol">◆</div><span id="optText1">Option B</span>
+                </div>
+                <div id="opt2" class="opt-card opt-2">
+                    <div class="opt-symbol">●</div><span id="optText2">Option C</span>
+                </div>
+                <div id="opt3" class="opt-card opt-3">
+                    <div class="opt-symbol">■</div><span id="optText3">Option D</span>
+                </div>
             </div>
             <div id="answerRevealBox" style="display:none;">
-                <p style="font-size:1.3rem; margin-bottom: 6px;">Correct Answer: <strong id="correctAnswerLabel" style="color:#00f2c3;"></strong></p>
+                <p style="font-size:1.3rem; margin-bottom: 6px;">Correct Answer: <strong id="correctAnswerLabel"
+                        style="color:#00f2c3;"></strong></p>
                 <a id="sourceUrlLink" class="source-link" target="_blank" rel="noopener">Learn more from source</a>
             </div>
         </div>
 
         <!-- 3. RESULTS / LEADERBOARD VIEW -->
         <div id="resultsView" class="card">
-            <h2 id="resultsHeading" style="font-size: 2rem; color:#00f2c3; margin-bottom: 10px;">Leaderboard (Top 5)</h2>
+            <h2 id="resultsHeading" style="font-size: 2rem; color:#00f2c3; margin-bottom: 10px;">Leaderboard (Top 5)
+            </h2>
             <table class="leaderboard-table">
                 <thead>
-                    <tr><th>Rank</th><th>Player</th><th>Score</th></tr>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Score</th>
+                    </tr>
                 </thead>
                 <tbody id="leaderboardBody"></tbody>
             </table>
@@ -577,4 +665,5 @@
         initHost();
     </script>
 </body>
+
 </html>
